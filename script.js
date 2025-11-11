@@ -1,6 +1,6 @@
 const BREEDS =["affenpinscher", "african", "airedale"];
 const URL_BREEDS = "https://dog.ceo/api/breed/{breed}/images";
-
+const ONE_BREED = "https://dog.ceo/api/breed/{breed}/images";
 
 document.addEventListener("DOMContentLoaded", ()=>{
     BREEDS.forEach(breed =>{
@@ -10,6 +10,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
         });
     })
     
+    
+    trElement.addEventListener("click",createLink());
+    function createLink(urlClikBreed,breed){
+        
+    }
     
     function getData(method, url, callback) {
         const request = new XMLHttpRequest();
@@ -53,6 +58,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         const tbodyElements = document.getElementsByTagName("tbody");
         const tbodyElement = tbodyElements[0];
             const trElement = document.createElement("tr");
+            trElement.id = "click-on-tr";
                 const tdElement = document.createElement("td");
                     const imgElement = document.createElement("img")
                     imgElement.src = img;

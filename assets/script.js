@@ -1,6 +1,5 @@
 const BREEDS =["affenpinscher", "african", "airedale"];
 const URL_BREEDS = "https://dog.ceo/api/breed/{breed}/images";
-const ONE_BREED = "https://dog.ceo/api/breed/{breed}/images";
 
 document.addEventListener("DOMContentLoaded", ()=>{
     BREEDS.forEach(breed =>{
@@ -54,22 +53,37 @@ document.addEventListener("DOMContentLoaded", ()=>{
        createElement(imgDog, breed);
     }
 
-    function createElement(img, breed){
+    function createElement(img, breed) {
         const tbodyElements = document.getElementsByTagName("tbody");
+
         const tbodyElement = tbodyElements[0];
             const trElement = document.createElement("tr");
-            trElement.id = "click-on-tr";
+                trElement.className = "breed-row"; // Para CSS
+            const h2Element = document.createElement("h2");
+                h2Element.innerText = breed;
+
                 const tdElement = document.createElement("td");
-                    const imgElement = document.createElement("img")
-                    imgElement.src = img;
-                    const h2Element = document.createElement("h2");
-                    h2Element.innerText = breed;
-                tdElement.appendChild(imgElement);
+
+                    // 1. Creamos el enlace
+                    const linkElement = document.createElement("a");
+                    // 2. Le decimos a dónde va: a la nueva página, pasando la raza en la URL
+                    linkElement.href = `/templates/breeds.html?breed=${breed}`;
+
+                        // 3. Creamos el contenido que irá DENTRO del enlace
+                        const imgElement = document.createElement("img")
+                        imgElement.src = img;
+
+                    // 4. Metemos la imagen 
+                    linkElement.appendChild(imgElement);
+
+                // 5. Metemos el enlace DENTRO de la celda (td)
+                tdElement.appendChild(linkElement); 
+                
+            // 6. Metemos la celda (td) DENTRO de la fila (tr)
             trElement.appendChild(tdElement);
             trElement.appendChild(h2Element);
         tbodyElement.appendChild(trElement);
     }
-    
    
     
    

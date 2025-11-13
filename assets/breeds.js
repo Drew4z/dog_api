@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // 2. Buscamos el parámetro específico llamado 'breed'
     const breedName = urlParams.get('breed');
-
+    
     // 3. Si existe, llamamos a la API para esa raza
     if (breedName) {
         showBreedImages(breedName);

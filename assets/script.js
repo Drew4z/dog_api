@@ -1,19 +1,22 @@
-const BREEDS =["affenpinscher", "african", "airedale"];
-const URL_BREEDS = "https://dog.ceo/api/breed/{breed}/images";
+// const BREEDS =["affenpinscher", "african", "airedale"];
+const URL_ALL_BREEDS = "https://dog.ceo/api/breeds/list/all";
+const URL_IMG_BREEDS = "https://dog.ceo/api/breed/{breed}/images";
 
 document.addEventListener("DOMContentLoaded", ()=>{
-    BREEDS.forEach(breed =>{
-        let urlThisBreed = URL_BREEDS.replace("{breed}",breed);
-        getData("get", urlThisBreed, (data)=>{
-            processData(data,breed)
-        });
-    })
-    
-    
-    trElement.addEventListener("click",createLink());
-    function createLink(urlClikBreed,breed){
-        
-    }
+
+    getData("get", URL_ALL_BREEDS, (data) => {
+        const breedObject = data.message;
+        const breedAllArray = Object.keys(breedObject);
+
+        const breedNum = 20;
+        const breedArray = breedAllArray.slice(0,breedNum);
+        breedArray.forEach(breed =>{
+            let urlThisBreed = URL_IMG_BREEDS.replace("{breed}",breed);
+            getData("get", urlThisBreed, (imgData)=>{
+                processData(imgData,breed)
+            });
+        })
+    });
     
     function getData(method, url, callback) {
         const request = new XMLHttpRequest();
@@ -57,34 +60,27 @@ document.addEventListener("DOMContentLoaded", ()=>{
         const tbodyElements = document.getElementsByTagName("tbody");
 
         const tbodyElement = tbodyElements[0];
-            const trElement = document.createElement("tr");
-                trElement.className = "breed-row"; // Para CSS
-            const h2Element = document.createElement("h2");
-                h2Element.innerText = breed;
+            // 1. Creamos el enlace
+            const linkElement = document.createElement("a");
+            // 2. Le decimos a dónde va: a la nueva página, pasando la raza en la URL
+            linkElement.href = `/templates/breeds.html?breed=${breed}`;
 
-                const tdElement = document.createElement("td");
+                const trElement = document.createElement("tr");
+                    trElement.className = "breed-row"; // Para CSS
 
-                    // 1. Creamos el enlace
-                    const linkElement = document.createElement("a");
-                    // 2. Le decimos a dónde va: a la nueva página, pasando la raza en la URL
-                    linkElement.href = `/templates/breeds.html?breed=${breed}`;
+                const h2Element = document.createElement("h2");
+                    h2Element.innerText = breed;
 
-                        // 3. Creamos el contenido que irá DENTRO del enlace
-                        const imgElement = document.createElement("img")
-                        imgElement.src = img;
+                    const tdElement = document.createElement("td");
+                            // 3. Creamos el contenido que irá DENTRO del enlace
+                            const imgElement = document.createElement("img")
+                            imgElement.src = img;
 
-                    // 4. Metemos la imagen 
-                    linkElement.appendChild(imgElement);
-
-                // 5. Metemos el enlace DENTRO de la celda (td)
-                tdElement.appendChild(linkElement); 
-                
-            // 6. Metemos la celda (td) DENTRO de la fila (tr)
-            trElement.appendChild(tdElement);
-            trElement.appendChild(h2Element);
+                    tdElement.appendChild(imgElement); 
+                trElement.appendChild(tdElement);
+                trElement.appendChild(h2Element);
+            linkElement.appendChild(trElement);    
         tbodyElement.appendChild(trElement);
     }
-   
-    
    
 });

@@ -79,8 +79,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     tdElement.appendChild(imgElement); 
                 trElement.appendChild(tdElement);
                 trElement.appendChild(h2Element);
-            linkElement.appendChild(trElement);    
-        tbodyElement.appendChild(trElement);
+            linkElement.appendChild(trElement);
+        tbodyElement.appendChild(linkElement);
     }
    
 });

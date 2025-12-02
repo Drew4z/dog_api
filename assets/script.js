@@ -3,39 +3,37 @@ const URL_ALL_BREEDS = "https://dog.ceo/api/breeds/list/all";
 const URL_IMG_BREEDS = "https://dog.ceo/api/breed/{breed}/images";
 
 document.addEventListener("DOMContentLoaded", ()=>{
-
-    getData("get", URL_ALL_BREEDS, (data) => {
-        const breedObject = data.message;
-        const breedAllArray = Object.keys(breedObject);
-
-        const breedNum = 20;
-        const breedArray = breedAllArray.slice(0,breedNum);
-        breedArray.forEach(breed =>{
-            let urlThisBreed = URL_IMG_BREEDS.replace("{breed}",breed);
-            getData("get", urlThisBreed, (imgData)=>{
-                processData(imgData,breed)
-            });
-        })
-    });
     
-    function getData(method, url, callback) {
-        const request = new XMLHttpRequest();
-    
-        request.onreadystatechange = (e) => {
-            if (request.readyState !== 4) { // Si aún no se ha completado la petición, no se hace nada.
-                return;
+    async function getData() {
+        try {
+            const response = await fetch(URL_ALL_BREEDS);
+            // Verificamos si la respuesta es correcta
+            if (!response.ok) throw new Error("Error conectando con la API");
+            
+            const data = await response.json();
+
+            if (data && data.message) {
+                const breedObject = data.message;
+                const breedAllArray = Object.keys(breedObject);
+                const breedNum = 20;
+                const breedArray = breedAllArray.slice(0, breedNum);
+
+                // SOLUCIÓN ASÍNCRONA: Usamos for...of para mantener el orden
+                for (const breed of breedArray) {
+                    let urlThisBreed = URL_IMG_BREEDS.replace("{breed}", breed);
+                    
+                    try {
+                        let responseImg = await fetch(urlThisBreed);
+                        let dataImg = await responseImg.json();
+                        console.log(dataImg)
+                        processData(dataImg, breed);
+                    } catch (err) {
+                        console.error(`Error cargando imagen para ${breed}`, err);
+                    }
+                }
             }
-            if (request.status === 200) {
-                const response = request.response;
-                const data = JSON.parse(response);
-                callback(data);
-            }
-        };
-        try{
-            request.open(method,url);
-            request.send();
-        } catch(e) {
-            console.log(e);
+        } catch (error) {
+            console.error("Error general:", error);
         }
     }
     
@@ -83,4 +81,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
         tbodyElement.appendChild(linkElement);
     }
    
+    getData();
 });
+
